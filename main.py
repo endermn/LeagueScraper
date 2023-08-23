@@ -4,13 +4,17 @@ from typing import List
 from ProfileAnalyzer import Profile_Analyzer
 import ProfileScraper
 import FileManager
+import csv
+from collections import Counter
 
-HEADERS = {"User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"}
-PAGES = 1
+
+HEADERS: dict[str, str] = {"User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"}
+PAGES: int = 1
 
 FileManager.Manager().clear_file('data.csv')
 
 file = open('data.csv', 'a', encoding="utf-8")
+file.write('Rank, IGN, Tier, LP, Win-Lose, Winrate, Most Played, KDA, Avg CS, KP, \n')
 
 for i in range(PAGES + 1):
     url = f"https://www.op.gg/leaderboards/tier?region=euw&page={i}"
@@ -22,8 +26,14 @@ for i in range(PAGES + 1):
     soup = BeautifulSoup(resp.content, "lxml")
 
     for i in ProfileScraper.Scraper(soup).scrape_profiles():
-        Analyzer = Profile_Analyzer('https://u.gg/lol' + i + "/overview")
+        Analyzer = Profile_Analyzer('https://op.gg' + i)
         file.write(Analyzer.get_data())
+file.close()
+with open('data.csv', 'r', encoding='utf-8') as file:
+    column = (row[6] for row in csv.reader(file))
+    print("Most frequent value: {0}".format(Counter(column).most_common()[0][0]))
+
 
 # TODO:
 #   Implement for all regions
+#   Search on conditions(wr, champ, rank, )
