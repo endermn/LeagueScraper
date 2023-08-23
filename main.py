@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
 from typing import List
-from time import sleep
 from ProfileAnalyzer import Profile_Analyzer
 import ProfileScraper
 import FileManager
