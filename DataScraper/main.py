@@ -8,11 +8,10 @@ import FileManager
 HEADERS: dict[str, str] = {"User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"}
 PAGES: int = 2
 
-
-if __name__ == "__main__":
-    DATA_FILE = "../player_data.csv"
+def main() -> None:
+    DATA_FILE: str = "../player_data.csv"
     
-    FileManager.Manager().clear_file(DATA_FILE)
+    FileManager.Manager(DATA_FILE).clear_file()
     with open(DATA_FILE, 'a', encoding="utf-8") as file:
         file.write('Rank, IGN, Tier, LP, Win-Lose, Winrate, Most Played, KDA, Avg CS, KP, \n')
 
@@ -28,6 +27,10 @@ if __name__ == "__main__":
             for i in ProfileScraper.Scraper(soup).scrape_profiles():
                 Analyzer = Profile_Analyzer('https://op.gg' + i)
                 file.write(Analyzer.get_data())
+
+
+if __name__ == "__main__":
+    main()
 # TODO:
 #   Implement for all regions
 #   Search on conditions(wr, champ, rank, )

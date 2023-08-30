@@ -3,8 +3,8 @@ from typing import List
 
 class Most_Frequent_Values:
     def __init__(self) -> None:
-        self.data_file = '../player_data.csv'
-        self.first_line = self.__read_first_line()
+        self.data_file: str = '../player_data.csv'
+        self.first_line: List[str] = self.__read_first_line()
         
     def __read_first_line(self) -> List[str]:
         with open(self.data_file, 'r', encoding='utf-8') as file:
