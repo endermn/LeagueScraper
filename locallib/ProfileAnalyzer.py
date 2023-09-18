@@ -23,6 +23,7 @@ class Profile_Analyzer:
         self.most_played = self.most_played.find('div', {'class' : 'name'})
         self.most_played = self.most_played.find('a').text.strip()
         self.cs_min: str = self.new_soup.find('div', {'class' : 'cs'}).text.strip()
+        
     def get_data(self) -> str:
         write_data: str = f"rank {self.leaderboard_rank},{self.ign},{self.rank.text.strip()},{self.lp},{self.total_games.text.strip()},{self.winrate},{self.most_played},{self.kda},{self.cs_min},\n"
         print(write_data)
