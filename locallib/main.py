@@ -61,7 +61,9 @@ def main() -> None:
         root.withdraw()
         if call():
             write_data(DATA_FILE, CURRENT_PATCH)
+        else:
+            exit(1)
 if __name__ == "__main__":
     main()
 # TODO:
-#   Search on conditions(wr, champ, rank, )
+#
