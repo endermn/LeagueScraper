@@ -26,5 +26,4 @@ class Profile_Analyzer:
         
     def get_data(self) -> str:
         write_data: str = f"rank {self.leaderboard_rank},{self.ign},{self.rank.text.strip()},{self.lp},{self.total_games.text.strip()},{self.winrate},{self.most_played},{self.kda},{self.cs_min},\n"
-        print(write_data)
         return write_data
