@@ -39,8 +39,8 @@ class DataWriter():
                 soup = BeautifulSoup(resp.content, "lxml")
                 profiles: List[str] = ProfileScraper.Scraper(soup).scrape_profiles()
                 
-                for profile in range(5):
-                    Analyzer = Profile_Analyzer(self.stat_site_url + profiles[profile])
+                for i in range(100):
+                    Analyzer = Profile_Analyzer(self.stat_site_url + profiles[i])
                     file.write(Analyzer.get_data())
         
         most_frequent.Most_Frequent_Values().write_data(patch)
@@ -48,7 +48,6 @@ class DataWriter():
     def check_patch_value(self) -> None:
         Patch = PatchScraper.Patch(self.patch_url, HEADERS)
         CURRENT_PATCH = Patch.scrape_patch()
-        first_line: str = ""
         
         with open('../average_stats.csv', 'r', encoding='utf-8') as file:
             first_line = file.readline()
