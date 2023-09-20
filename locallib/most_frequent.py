@@ -16,6 +16,6 @@ class Most_Frequent_Values:
             file.writelines(patch + '\n')
             for i in range(2, len(self.first_line) - 2):
                 file.write(f"{self.first_line[i]}:, " + df[self.first_line[i]].value_counts().idxmax() + "\n")
-
+            file.write(f"{self.first_line[len(self.first_line) - 2]}:, " + str(df[self.first_line[len(self.first_line) - 2]].mean()))
 if __name__ == "__main__":
     Most_Frequent_Values().write_data()

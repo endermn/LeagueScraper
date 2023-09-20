@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import logging
+import re
 
 HEADERS = {"User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"}
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
@@ -24,6 +25,9 @@ class Profile_Analyzer:
             self.most_played = self.most_played.find('div', {'class' : 'name'})
             self.most_played = self.most_played.find('a').text.strip()
             self.cs_min: str = self.new_soup.find('div', {'class' : 'cs'}).text.strip()
+            self.cs_min = self.cs_min.replace("CS", "")
+            self.cs_min = self.cs_min.replace(" ", "")
+            self.cs_min = re.sub("\(.*?\)","",self.cs_min)
         except Exception:
             pass    
     def get_data(self) -> str:

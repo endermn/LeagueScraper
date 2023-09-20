@@ -27,7 +27,7 @@ class DataWriter():
     def __write_data(self, patch: str) -> None:
         FileManager.Manager(DATA_FILE).clear_file()
         with open(DATA_FILE, 'a', encoding="utf-8") as file:
-            file.write('Rank, IGN, Tier, LP, Win-Lose, Winrate, Most Played, KDA, Avg CS, KP, \n')
+            file.write('Rank, IGN, Tier, LP, Win-Lose, Winrate, Most Played, KDA, Avg CS, \n')
 
             for i in range(1, PAGES + 1):
                 url: str = f"https://www.op.gg/leaderboards/tier?region=euw&page={i}"
@@ -39,7 +39,7 @@ class DataWriter():
                 soup = BeautifulSoup(resp.content, "lxml")
                 profiles: List[str] = ProfileScraper.Scraper(soup).scrape_profiles()
                 
-                for i in range(100):
+                for i in range(10):
                     Analyzer = Profile_Analyzer(self.stat_site_url + profiles[i])
                     file.write(Analyzer.get_data())
         
