@@ -8,10 +8,9 @@ ScrapeLogger = logger.setup_logging("ScrapeLogger", False)
 
 class Profile_Analyzer:
 
-    def __init__(self, link) -> None:
+    def __init__(self, link: str) -> None:
         self.new_webpage = requests.get(link, headers=HEADERS, timeout=60)
         self.new_soup = BeautifulSoup(self.new_webpage.content, 'lxml')
-
         try:
             self.leaderboard_rank:str = self.new_soup.find('span', {'class' : 'ranking'}).text.strip()
             self.leaderboard_rank = self.leaderboard_rank.replace(",", "")
@@ -31,6 +30,8 @@ class Profile_Analyzer:
             self.cs_min = self.cs_min.replace(" ", "")
             self.cs_min = re.sub("\(.*?\)","",self.cs_min)
             self.level = self.new_soup.find('span', {"class" : "level"}).text.strip()
+            self.region = link.partition("https://op.gg/summoners/")[2]
+            self.region = self.region.partition("/")[0]
 
         except Exception:
             pass
@@ -38,7 +39,7 @@ class Profile_Analyzer:
     def get_data(self) -> str:
         
         try:
-            write_data: str = f"rank {self.leaderboard_rank},{self.ign},{self.rank.text.strip()},{self.lp},{self.total_games.text.strip()},{self.winrate},{self.most_played},{self.kda},{self.level},{self.cs_min}, \n"
+            write_data: str = f"rank {self.leaderboard_rank},{self.ign},{self.rank.text.strip()},{self.lp},{self.total_games.text.strip()},{self.winrate},{self.most_played},{self.kda},{self.region},{self.level},{self.cs_min}, \n"
         except Exception:
             ScrapeLogger.warning("Couldn't fetch information for profile rank " + self.leaderboard_rank + "\n")
             return ""

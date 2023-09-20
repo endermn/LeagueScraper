@@ -19,4 +19,6 @@ class Scraper:
         for profile in self.profiles:
             link: str = profile.find('a').get('href')
             links.append(link)
+        if len(links) == 0:
+            ProfileLogger.warning("Profile list empty")
         return links

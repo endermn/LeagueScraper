@@ -10,6 +10,7 @@ import ProfileScraper
 import FileManager
 import average_stats
 import PatchScraper
+import logger
 
 
 DATA_FILE: str = "../player_data.csv"
@@ -17,6 +18,7 @@ PAGES: int = 1
 HEADERS: dict[str, str] = {
     "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"
 }
+DataWriterLogger = logger.setup_logging("DataLogger", False)
 
 class DataWriter():
     def __init__(self) -> None:
@@ -29,7 +31,7 @@ class DataWriter():
     def __write_data(self, patch: str) -> None:
         FileManager.clear_file(DATA_FILE)
         with open(DATA_FILE, 'a', encoding="utf-8") as file:
-            file.write('Rank, IGN, Tier, LP, Win-Lose, Winrate, Most Played, KDA, Avg Level, Avg CS, \n')
+            file.write('Rank, IGN, Tier, LP, Win-Lose, Winrate, Most Played, KDA, Region, Avg Level, Avg CS, \n')
 
             for i in range(1, PAGES + 1):
                 url: str = f"https://www.op.gg/leaderboards/tier?region=euw&page={i}"
@@ -41,7 +43,7 @@ class DataWriter():
                 soup = BeautifulSoup(resp.content, "lxml")
                 profiles: List[str] = ProfileScraper.Scraper(soup).scrape_profiles()
                 
-                for i in range(10):
+                for i in range(20):
                     Analyzer = Profile_Analyzer(self.stat_site_url + profiles[i])
                     file.write(Analyzer.get_data())
         
@@ -61,7 +63,10 @@ class DataWriter():
         else:
             root=tk.Tk()
             root.withdraw()
+
             if self.__msgbox():
+                DataWriterLogger.info("Refreshing Data \n")
                 self.__write_data(CURRENT_PATCH)
             else:
-                exit(1)
+                DataWriterLogger.info("Data won't be refreshed")
+                return None
