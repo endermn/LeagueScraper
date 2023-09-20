@@ -1,13 +1,15 @@
 from bs4 import BeautifulSoup
 import requests
+from tkinter import messagebox
+import tkinter as tk
+
 from typing import List
+
 from ProfileAnalyzer import Profile_Analyzer
 import ProfileScraper
 import FileManager
-import most_frequent
+import average_stats
 import PatchScraper
-import tkinter as tk
-from tkinter import messagebox
 
 
 DATA_FILE: str = "../player_data.csv"
@@ -25,9 +27,9 @@ class DataWriter():
         return messagebox.askquestion('Refresh data', 'Do you really want to refresh the data') == "yes"
 
     def __write_data(self, patch: str) -> None:
-        FileManager.Manager(DATA_FILE).clear_file()
+        FileManager.clear_file(DATA_FILE)
         with open(DATA_FILE, 'a', encoding="utf-8") as file:
-            file.write('Rank, IGN, Tier, LP, Win-Lose, Winrate, Most Played, KDA, Avg CS, \n')
+            file.write('Rank, IGN, Tier, LP, Win-Lose, Winrate, Most Played, KDA, Avg Level, Avg CS, \n')
 
             for i in range(1, PAGES + 1):
                 url: str = f"https://www.op.gg/leaderboards/tier?region=euw&page={i}"
@@ -43,11 +45,10 @@ class DataWriter():
                     Analyzer = Profile_Analyzer(self.stat_site_url + profiles[i])
                     file.write(Analyzer.get_data())
         
-        most_frequent.Most_Frequent_Values().write_data(patch)
+        average_stats.Most_Frequent_Values().write_data(patch)
 
     def check_patch_value(self) -> None:
-        Patch = PatchScraper.Patch(self.patch_url, HEADERS)
-        CURRENT_PATCH = Patch.scrape_patch()
+        CURRENT_PATCH = PatchScraper.scrape_patch(self.patch_url, HEADERS)
         
         with open('../average_stats.csv', 'r', encoding='utf-8') as file:
             first_line = file.readline()

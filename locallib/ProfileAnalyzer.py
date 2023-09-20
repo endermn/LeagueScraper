@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-import logging
 import re
 import logger
 
@@ -8,13 +7,15 @@ HEADERS = {"User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit
 ScrapeLogger = logger.setup_logging("ScrapeLogger", False)
 
 class Profile_Analyzer:
+
     def __init__(self, link) -> None:
         self.new_webpage = requests.get(link, headers=HEADERS, timeout=60)
         self.new_soup = BeautifulSoup(self.new_webpage.content, 'lxml')
+
         try:
             self.leaderboard_rank:str = self.new_soup.find('span', {'class' : 'ranking'}).text.strip()
             self.leaderboard_rank = self.leaderboard_rank.replace(",", "")
-            self.kda: str = self. new_soup.find('div', {'class' : 'kda'}).find_next().text.strip()
+            self.kda: str = self.new_soup.find('div', {'class' : 'kda'}).find_next().text.strip()
             self.ign: str = self.new_soup.find('h1', {'class' : 'summoner-name'}).text.strip()
             self.rank: str = self.new_soup.find('div', {'class' : 'tier'})
             self.lp: str = self.rank.find_next()
@@ -29,12 +30,17 @@ class Profile_Analyzer:
             self.cs_min = self.cs_min.replace("CS", "")
             self.cs_min = self.cs_min.replace(" ", "")
             self.cs_min = re.sub("\(.*?\)","",self.cs_min)
+            self.level = self.new_soup.find('span', {"class" : "level"}).text.strip()
+
         except Exception:
-            pass    
+            pass
+
     def get_data(self) -> str:
+        
         try:
-            write_data: str = f"rank {self.leaderboard_rank},{self.ign},{self.rank.text.strip()},{self.lp},{self.total_games.text.strip()},{self.winrate},{self.most_played},{self.kda},{self.cs_min},\n"
+            write_data: str = f"rank {self.leaderboard_rank},{self.ign},{self.rank.text.strip()},{self.lp},{self.total_games.text.strip()},{self.winrate},{self.most_played},{self.kda},{self.level},{self.cs_min}, \n"
         except Exception:
-            ScrapeLogger.warning("Couldn't fetch information for profile rank " + self.leaderboard_rank)
+            ScrapeLogger.warning("Couldn't fetch information for profile rank " + self.leaderboard_rank + "\n")
             return ""
+        ScrapeLogger.info(write_data)
         return write_data

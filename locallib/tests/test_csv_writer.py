@@ -6,8 +6,9 @@ parent = os.path.dirname(current)
 
 sys.path.append(parent)
 
-
 from unittest import main, TestCase
+import logger
+TestLogger = logger.setup_logging("TestLogger", False)
 
 class test_csv(TestCase):
     def setUp(self) -> None:
@@ -18,8 +19,10 @@ class test_csv(TestCase):
         return super().setUp()
     def test_data_file_name(self) -> None:
         self.assertTrue(self.test_data_file_name in self.filenames, "Missing player data file")
+
     def test_stats_file_name(self) -> None: 
         self.assertTrue(self.test_stats_file_name in self.filenames, "Missing stats data file")
+
     def test_data(self) -> None:
         with open('../../player_data.csv', 'r', encoding='utf-8') as file:
             first_line = file.readline()

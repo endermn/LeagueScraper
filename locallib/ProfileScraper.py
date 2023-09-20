@@ -2,7 +2,9 @@ from typing import List
 import logger
 
 ProfileLogger = logger.setup_logging("ProfileLogger", False)
+
 class Scraper:
+
     def __init__(self, soup) -> None:
         self.soup = soup
         try:
@@ -11,6 +13,7 @@ class Scraper:
             ProfileLogger.exception("AttributeError")
         except TypeError as e:
             ProfileLogger.exception("TypeError")
+
     def scrape_profiles(self) -> List[str]:
         links: List[str] = []
         for profile in self.profiles:

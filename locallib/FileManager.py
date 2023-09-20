@@ -1,9 +1,10 @@
-class Manager:
-    def __init__(self, PATH: str) -> None:
-        self.PATH: str = PATH
-    def clear_file(self):
-        try:
-            with open(self.PATH, 'w+', encoding='utf-8') as file:
-                file.close()
-        except FileNotFoundError as e:
-            print(e)
+import logger
+
+FileLogger = logger.setup_logging("FileManager", False)
+
+def clear_file(path: str) -> None:
+    try:
+        with open(path, 'w+', encoding='utf-8') as file:
+            file.close()
+    except FileNotFoundError as e:
+        FileLogger.error("File Not Found")
