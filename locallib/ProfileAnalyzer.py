@@ -2,9 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 import logging
 import re
+import logger
 
 HEADERS = {"User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"}
-logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+ScrapeLogger = logger.setup_logging("ScrapeLogger", False)
 
 class Profile_Analyzer:
     def __init__(self, link) -> None:
@@ -34,6 +35,6 @@ class Profile_Analyzer:
         try:
             write_data: str = f"rank {self.leaderboard_rank},{self.ign},{self.rank.text.strip()},{self.lp},{self.total_games.text.strip()},{self.winrate},{self.most_played},{self.kda},{self.cs_min},\n"
         except Exception:
-            logging.warning('Couldn\'t fetch information for profile rank ' + self.leaderboard_rank)
+            ScrapeLogger.warning("Couldn't fetch information for profile rank " + self.leaderboard_rank)
             return ""
         return write_data
